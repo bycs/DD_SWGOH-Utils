@@ -5,7 +5,7 @@ class BaseUnit(models.Model):
     unit_id = models.CharField(
         max_length=100,
         db_index=True,
-        verbose_name='Unit id',
+        verbose_name='Unit ID',
     )
     unit_name = models.CharField(
         max_length=100,
@@ -32,23 +32,15 @@ class BaseAbility(models.Model):
     ability_id = models.CharField(
         max_length=100,
         db_index=True,
-        verbose_name='Ability id',
+        verbose_name='Ability ID',
     )
     ability_name = models.CharField(
         max_length=100,
         verbose_name='Ability Name',
     )
-    combat_type = models.PositiveSmallIntegerField(
-        verbose_name='Combat Type',
-        editable=False,
-    )
-    char_id = models.CharField(
+    unit_id = models.CharField(
         max_length=100,
-        verbose_name='Character id',
-    )
-    ship_id = models.CharField(
-        max_length=100,
-        verbose_name='Ship id',
+        verbose_name='Unit ID',
     )
     tier_max = models.PositiveSmallIntegerField(
         verbose_name='Max Tier',
