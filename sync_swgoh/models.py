@@ -4,6 +4,7 @@ from django.db import models
 class BaseUnit(models.Model):
     unit_id = models.CharField(
         max_length=100,
+        primary_key=True,
         db_index=True,
         verbose_name='Unit ID',
     )
@@ -31,6 +32,7 @@ class BaseUnit(models.Model):
 class BaseAbility(models.Model):
     ability_id = models.CharField(
         max_length=100,
+        primary_key=True,
         db_index=True,
         verbose_name='Ability ID',
     )
@@ -59,3 +61,95 @@ class BaseAbility(models.Model):
 
     def __str__(self):
         return self.ability_name
+
+
+class GuildData(models.Model):
+    ally_code = models.PositiveIntegerField(
+        primary_key=True,
+        db_index=True,
+        verbose_name='Ally Code',
+    )
+    player_name = models.CharField(
+        max_length=100,
+        verbose_name='Player Name',
+    )
+    gp_chars = models.PositiveIntegerField(
+        verbose_name='GP Characters',
+    )
+    gp_ships = models.PositiveIntegerField(
+        verbose_name='GP Ships',
+    )
+    gp_all = models.PositiveIntegerField(
+        verbose_name='GP Total',
+    )
+
+    def __str__(self):
+        return self.player_name
+
+
+class GuildCharacter(models.Model):
+    id = models.AutoField(primary_key=True)
+    ally_code = models.PositiveIntegerField(
+        verbose_name='Ally Code',
+        db_index=True,
+    )
+    unit_id = models.CharField(
+        max_length=100,
+        db_index=True,
+        verbose_name='Unit ID',
+    )
+    rarity = models.PositiveSmallIntegerField(
+        verbose_name='Rarity',
+    )
+    gear_level = models.PositiveSmallIntegerField(
+        verbose_name='Gear Level',
+    )
+    relic_tier = models.PositiveSmallIntegerField(
+        verbose_name='Relic Tier',
+    )
+    power = models.PositiveIntegerField(
+        verbose_name='Power',
+    )
+    health = models.PositiveIntegerField(
+        verbose_name='Health',
+    )
+    protection = models.PositiveIntegerField(
+        verbose_name='Protection',
+    )
+    speed = models.PositiveSmallIntegerField(
+        verbose_name='Speed',
+    )
+    physical_damage = models.PositiveSmallIntegerField(
+        verbose_name='Physical Damage',
+    )
+    critical_damage = models.FloatField(
+        verbose_name='',
+    )
+    critical_chance = models.FloatField(
+        verbose_name='Critical Chance',
+    )
+    potency = models.FloatField(
+        verbose_name='Potency',
+    )
+    tenacity = models.FloatField(
+        verbose_name='Tenacity',
+    )
+
+
+class GuildShip(models.Model):
+    id = models.AutoField(primary_key=True)
+    ally_code = models.PositiveIntegerField(
+        verbose_name='Ally Code',
+        db_index=True,
+    )
+    unit_id = models.CharField(
+        max_length=100,
+        db_index=True,
+        verbose_name='Unit ID',
+    )
+    rarity = models.PositiveSmallIntegerField(
+        verbose_name='Rarity',
+    )
+    power = models.PositiveIntegerField(
+        verbose_name='Power',
+    )
