@@ -109,14 +109,13 @@ class GuildData(models.Model):
 
 class GuildCharacter(models.Model):
     id = models.AutoField(primary_key=True)
-    ally_code = models.PositiveIntegerField(
-        verbose_name='Ally Code',
-        db_index=True,
+    ally_code = models.ForeignKey(
+        'sync_swgoh.GuildData',
+        on_delete=models.CASCADE,
     )
-    unit_id = models.CharField(
-        max_length=100,
-        db_index=True,
-        verbose_name='Unit ID',
+    unit_id = models.ForeignKey(
+        'sync_swgoh.BaseUnit',
+        on_delete=models.CASCADE,
     )
     rarity = models.PositiveSmallIntegerField(
         verbose_name='Rarity',
@@ -163,14 +162,13 @@ class GuildCharacter(models.Model):
 
 class GuildShip(models.Model):
     id = models.AutoField(primary_key=True)
-    ally_code = models.PositiveIntegerField(
-        verbose_name='Ally Code',
-        db_index=True,
+    ally_code = models.ForeignKey(
+        'sync_swgoh.GuildData',
+        on_delete=models.CASCADE,
     )
-    unit_id = models.CharField(
-        max_length=100,
-        db_index=True,
-        verbose_name='Unit ID',
+    unit_id = models.ForeignKey(
+        'sync_swgoh.BaseUnit',
+        on_delete=models.CASCADE,
     )
     rarity = models.PositiveSmallIntegerField(
         verbose_name='Rarity',

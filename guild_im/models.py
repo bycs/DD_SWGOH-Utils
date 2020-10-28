@@ -1,3 +1,5 @@
+from django.db import models
+
 from sync_swgoh.models import GuildData, GuildCharacter, GuildShip
 
 
@@ -6,8 +8,14 @@ class IMData(GuildData):
 
 
 class IMCharacter(GuildCharacter):
-    pass
+    ally_code = models.ForeignKey(
+        'guild_im.IMData',
+        on_delete=models.CASCADE,
+    )
 
 
 class IMShip(GuildShip):
-    pass
+    ally_code = models.ForeignKey(
+        'guild_im.IMData',
+        on_delete=models.CASCADE,
+    )
