@@ -20,8 +20,13 @@ class BaseUnit(models.Model):
         verbose_name='URL Image',
         editable=False,
     )
+    COMBAT_TYPE_CHOICES = [
+        (1, ''),
+        (2, ''),
+    ]
     combat_type = models.PositiveSmallIntegerField(
         verbose_name='Combat Type',
+        choices=COMBAT_TYPE_CHOICES,
         editable=False,
     )
 
@@ -42,6 +47,7 @@ class BaseAbility(models.Model):
     )
     unit_id = models.CharField(
         max_length=100,
+        db_index=True,
         verbose_name='Unit ID',
     )
     tier_max = models.PositiveSmallIntegerField(
@@ -123,7 +129,7 @@ class GuildCharacter(models.Model):
         verbose_name='Physical Damage',
     )
     critical_damage = models.FloatField(
-        verbose_name='',
+        verbose_name='Critical Damage',
     )
     critical_chance = models.FloatField(
         verbose_name='Critical Chance',
