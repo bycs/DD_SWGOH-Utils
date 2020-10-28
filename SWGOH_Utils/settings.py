@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'sync_swgoh',
+    'guild_im',
 ]
 
 MIDDLEWARE = [

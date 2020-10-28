@@ -6,5 +6,5 @@ tests/
 
 db.*
 tokens/
-*/migrations/*
+*/migrations/0*
 

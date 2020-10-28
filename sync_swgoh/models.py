@@ -30,6 +30,10 @@ class BaseUnit(models.Model):
         editable=False,
     )
 
+    class Meta:
+        verbose_name = 'Unit'
+        verbose_name_plural = 'Units'
+
     def __str__(self):
         return self.unit_name
 
@@ -54,6 +58,7 @@ class BaseAbility(models.Model):
         verbose_name='Max Tier',
     )
     is_zeta = models.BooleanField(
+        db_index=True,
         verbose_name='is Zeta',
     )
     is_omega = models.BooleanField(
@@ -64,6 +69,10 @@ class BaseAbility(models.Model):
         verbose_name='URL Image',
         editable=False,
     )
+
+    class Meta:
+        verbose_name = 'Ability'
+        verbose_name_plural = 'Abilities'
 
     def __str__(self):
         return self.ability_name
@@ -91,6 +100,11 @@ class GuildData(models.Model):
 
     def __str__(self):
         return self.player_name
+
+    class Meta:
+        verbose_name = 'Guild Data'
+        verbose_name_plural = 'Guild Data'
+        abstract = True
 
 
 class GuildCharacter(models.Model):
@@ -141,6 +155,11 @@ class GuildCharacter(models.Model):
         verbose_name='Tenacity',
     )
 
+    class Meta:
+        verbose_name = 'Guild Character'
+        verbose_name_plural = 'Guild Characters'
+        abstract = True
+
 
 class GuildShip(models.Model):
     id = models.AutoField(primary_key=True)
@@ -159,3 +178,8 @@ class GuildShip(models.Model):
     power = models.PositiveIntegerField(
         verbose_name='Power',
     )
+
+    class Meta:
+        verbose_name = 'Guild Ship'
+        verbose_name_plural = 'Guild Ships'
+        abstract = True
