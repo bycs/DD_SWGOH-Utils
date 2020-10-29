@@ -19,11 +19,17 @@ def get_data_player(ally_code):
     data = pd.DataFrame(
         data=data,
         index=None,
-        columns=['ally_code', 'name', 'character_galactic_power', 'ship_galactic_power', 'galactic_power']
+        columns=[
+            'ally_code', 'name', 'character_galactic_power', 'ship_galactic_power', 'galactic_power', 'last_updated']
     )
-    data.set_axis(['ally_code', 'player_name', 'gp_chars', 'gp_ships', 'gp_all'], axis='columns', inplace=True)
+    data.set_axis(
+        ['ally_code', 'player_name', 'gp_chars', 'gp_ships', 'gp_total', 'last_updated'],
+        axis='columns',
+        inplace=True
+    )
     data.loc[:, 'ally_code'] = data.loc[:, 'ally_code'].astype('int32')
-    data.loc[:, 'gp_chars':'gp_all'] = data.loc[:, 'gp_chars':'gp_all'].astype('int32')
+    data.loc[:, 'gp_chars':'gp_total'] = data.loc[:, 'gp_chars':'gp_total'].astype('int32')
+    data['last_updated'] = data['last_updated'].astype('datetime64[ns, Europe/Moscow]')
     return data
 
 
@@ -75,7 +81,7 @@ def units_type_chars(units):
     """
     characters = units[units['combat_type'] == 1]
     del characters['combat_type']
-    return characters
+    return characters.reset_index(drop=True)
 
 
 def units_type_ships(units):
@@ -87,7 +93,7 @@ def units_type_ships(units):
     """
     ships = units[units['combat_type'] == 2]
     ships = ships.loc[:, ['ally_code', 'unit_id', 'rarity', 'power']]
-    return ships
+    return ships.reset_index(drop=True)
 
 
 def units_combat_type(units):
@@ -104,26 +110,26 @@ def units_combat_type(units):
 
 def get_ally_list(guild_id):
     """
-    Получение списка игроков гильдии
+    Получение списка кодов игроков гильдии
 
     :input guild_id (int):
-    :return строка с игроками гильдии (str):
+    :return список с игроками гильдии (list(int)):
     """
     link = f'https://swgoh.gg/api/guild/{guild_id}/'
     ally_list = pd.json_normalize(
         requests.get(link).json()['players']).loc[:, 'data.ally_code']
-    ally_list = list(ally_list.astype('str'))
-    ally_list = (', '.join(ally_list))
+    ally_list = list(ally_list)
     return ally_list
 
 
 def get_ally_count(guild_id):
     """
     Подсчет количества игроков в гильдии
-    :input guild_id (str):
+
+    :input guild_id (int):
     :return количетсво игроков в гильдии (int):
     """
-    ally_list = (get_ally_list(guild_id)).split(', ')
+    ally_list = get_ally_list(guild_id)
     count = len(ally_list)
     return count
 
@@ -131,6 +137,7 @@ def get_ally_count(guild_id):
 def get_base_units(combat_type):
     """
     Получение списка юнитов: персонажи или флот
+
     :input 'characters' or 'ships':
     :return массив с базой юнитов (DataFrame):
     """
@@ -180,17 +187,16 @@ def get_base_units_and_abilities():
 
 def sync_for_ally_list(ally_list):
     """
-    Получение строки со списком кодов игроков
+    Получение списка кодов игроков
 
-    :input ally_list (str):
+    :input ally_list (list(int)):
     :return три массива игроки, персонажи, флот (DataFrame x3):
     """
-    ally_list = ally_list.split(', ')
     data = pd.DataFrame(data=None, index=None)
     units = pd.DataFrame(data=None, index=None)
     for player in ally_list:
-        data = pd.concat([data, get_data_player(int(player))])
-        units = pd.concat([units, get_units_player(int(player))])
+        data = pd.concat([data, get_data_player(player)])
+        units = pd.concat([units, get_units_player(player)])
     data = data.sort_values(by=['player_name']).reset_index(drop=True)
     units = units.sort_values(by=['ally_code']).reset_index(drop=True)
     chars, ships = units_combat_type(units)

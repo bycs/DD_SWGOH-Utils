@@ -94,8 +94,12 @@ class GuildData(models.Model):
     gp_ships = models.PositiveIntegerField(
         verbose_name='GP Ships',
     )
-    gp_all = models.PositiveIntegerField(
+    gp_total = models.PositiveIntegerField(
         verbose_name='GP Total',
+    )
+    last_updated = models.CharField(
+        max_length=30,
+        verbose_name='Last Updated',
     )
 
     def __str__(self):
