@@ -38,6 +38,7 @@ class Migration(migrations.Migration):
                 ('ally_code', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='guild_im.imdata')),
                 ('unit_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='sync_swgoh.baseunit')),
                 ('rarity', models.PositiveSmallIntegerField(verbose_name='Rarity')),
+                ('power', models.PositiveIntegerField(verbose_name='Power')),
             ],
             options={
                 'verbose_name': 'Guild Ship',
