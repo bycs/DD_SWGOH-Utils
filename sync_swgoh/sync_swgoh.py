@@ -5,17 +5,32 @@
 
 import requests
 import pandas as pd
+from datetime import datetime
+from bs4 import BeautifulSoup
 
 
-def get_data_player(ally_code):
+def get_player_json(ally_code):
     """
-    Получение информации по игроку
+    Получение json по игроку
 
     :input ally_code (int):
-    :return массив с данными о игроке (DataFrame):
+    :return json:
     """
     link = f'https://swgoh.gg/api/player/{ally_code}/'
-    data = pd.json_normalize(requests.get(link).json()['data'])
+    json = requests.get(link).json()
+    return json
+
+
+def get_data_player(json):
+    """
+    Получение информации по игроку из json
+
+    :input json:
+    :return массив с данными о игроке (DataFrame):
+    """
+    data = json['data']
+    data['last_updated'] = datetime.fromisoformat(data['last_updated'])
+    data = pd.json_normalize(data)
     data = pd.DataFrame(
         data=data,
         index=None,
@@ -29,19 +44,17 @@ def get_data_player(ally_code):
     )
     data.loc[:, 'ally_code'] = data.loc[:, 'ally_code'].astype('int32')
     data.loc[:, 'gp_chars':'gp_total'] = data.loc[:, 'gp_chars':'gp_total'].astype('int32')
-    data['last_updated'] = data['last_updated'].astype('datetime64[ns, Europe/Moscow]')
     return data
 
 
-def get_units_player(ally_code):
+def get_units_player(json):
     """
-    Получение списка персонажей по игроку
+    Получение списка персонажей по игроку из json
 
-    :input ally_code (int):
+    :input json:
     :return массив с персонажами (DataFrame):
     """
-    link = f'https://swgoh.gg/api/player/{ally_code}/'
-    units = pd.json_normalize(requests.get(link).json(), 'units', [['data', 'name'], ['data', 'ally_code']],
+    units = pd.json_normalize(json, 'units', [['data', 'name'], ['data', 'ally_code']],
                               record_prefix='unit.', max_level=2,)
     units = pd.DataFrame(
         data=units,
@@ -185,6 +198,49 @@ def get_base_units_and_abilities():
     return units, abilities
 
 
+def get_arena_average_rank(ally_code):
+    """
+    Получение средних значений арен игрока
+
+    :input ally_code (int):
+    :return (int х2):
+    """
+    url = f'https://swgoh.gg/p/{ally_code}/'
+    html = requests.get(url).text
+    soup = BeautifulSoup(html, 'html.parser')
+    value_average_rank = soup.find_all("div", {"class": "stat-item-value"})
+    value_list = []
+    for i in value_average_rank:
+        value_list.append(i.get_text())
+    if len(value_list) > 5:
+        chars_arena_rank = value_list[2]
+        ships_arena_rank = value_list[5]
+    else:
+        value_current_rank = soup.find_all("div", {"class": "current-rank-value"})
+        value_list = []
+        for i in value_current_rank:
+            value_list.append(i.get_text())
+        chars_arena_rank = value_list[0]
+        ships_arena_rank = value_list[1]
+    return chars_arena_rank, ships_arena_rank
+
+
+def get_arena_average_rank_for_list(data):
+    """
+    Получение средних значений арен игрока
+
+    :input data (DataFrame):
+    :return (list(int) х2):
+    """
+    chars_arena = []
+    ships_arena = []
+    for ally in data['ally_code']:
+        chars_arena_player, ships_arena_player = get_arena_average_rank(ally)
+        chars_arena.append(chars_arena_player)
+        ships_arena.append(ships_arena_player)
+    return chars_arena, ships_arena
+
+
 def sync_for_ally_list(ally_list):
     """
     Получение списка кодов игроков
@@ -195,9 +251,13 @@ def sync_for_ally_list(ally_list):
     data = pd.DataFrame(data=None, index=None)
     units = pd.DataFrame(data=None, index=None)
     for player in ally_list:
-        data = pd.concat([data, get_data_player(player)])
-        units = pd.concat([units, get_units_player(player)])
+        json = get_player_json(player)
+        data = pd.concat([data, get_data_player(json)])
+        units = pd.concat([units, get_units_player(json)])
     data = data.sort_values(by=['player_name']).reset_index(drop=True)
+    chars_arena, ships_arena = get_arena_average_rank_for_list(data)
+    data['chars_average_rank'] = chars_arena
+    data['ships_average_rank'] = ships_arena
     units = units.sort_values(by=['ally_code']).reset_index(drop=True)
     chars, ships = units_combat_type(units)
     return data, chars, ships
@@ -210,6 +270,19 @@ def sync_for_guild_id(guild_id):
     :input guild_id (int):
     :return три массива игроки, персонажи, флот (DataFrame x3):
     """
-    ally_list = get_ally_list(guild_id)
-    data, chars, ships = sync_for_ally_list(ally_list)
+    link = f'https://swgoh.gg/api/guild/{guild_id}/'
+    json = requests.get(link).json()['players']
+    data = pd.DataFrame(data=None, index=None)
+    units = pd.DataFrame(data=None, index=None)
+    for player in range(len(json)):
+        data_player = get_data_player(json[player])
+        units_player = get_units_player(json[player])
+        data = pd.concat([data, data_player])
+        units = pd.concat([units, units_player])
+    data = data.sort_values(by=['player_name']).reset_index(drop=True)
+    chars_arena, ships_arena = get_arena_average_rank_for_list(data)
+    data['chars_average_rank'] = chars_arena
+    data['ships_average_rank'] = ships_arena
+    units = units.sort_values(by=['ally_code']).reset_index(drop=True)
+    chars, ships = units_combat_type(units)
     return data, chars, ships

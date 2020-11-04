@@ -97,9 +97,14 @@ class GuildData(models.Model):
     gp_total = models.PositiveIntegerField(
         verbose_name='GP Total',
     )
-    last_updated = models.CharField(
-        max_length=30,
+    last_updated = models.DateTimeField(
         verbose_name='Last Updated',
+    )
+    chars_average_rank = models.PositiveSmallIntegerField(
+        verbose_name='Chars Arena',
+    )
+    ships_average_rank = models.PositiveSmallIntegerField(
+        verbose_name='Ships Arena',
     )
 
     def __str__(self):
