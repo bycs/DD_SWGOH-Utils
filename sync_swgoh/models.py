@@ -1,4 +1,5 @@
 from django.db import models
+from sync_swgoh.managers import BaseUnitManager, BaseAbilityManager
 
 
 class BaseUnit(models.Model):
@@ -29,6 +30,8 @@ class BaseUnit(models.Model):
         choices=COMBAT_TYPE_CHOICES,
         editable=False,
     )
+
+    base_unit_manager = BaseUnitManager()
 
     class Meta:
         verbose_name = 'Unit'
@@ -70,6 +73,8 @@ class BaseAbility(models.Model):
         editable=False,
     )
 
+    base_ability_manager = BaseAbilityManager()
+
     class Meta:
         verbose_name = 'Ability'
         verbose_name_plural = 'Abilities'
@@ -78,7 +83,35 @@ class BaseAbility(models.Model):
         return self.ability_name
 
 
-class GuildData(models.Model):
+class GuildsData(models.Model):
+    guild_id = models.PositiveIntegerField(
+        primary_key=True,
+        db_index=True,
+        verbose_name='Guild ID',
+    )
+    guild_name = models.CharField(
+        max_length=100,
+        verbose_name='Guild Name',
+    )
+    gp_total = models.PositiveIntegerField(
+        verbose_name='GP Total',
+    )
+    players_count = models.PositiveIntegerField(
+        verbose_name='Players Count',
+    )
+    json_data_and_units = models.JSONField(
+        verbose_name='JSON with data and players'
+    )
+
+    def __str__(self):
+        return self.guild_name
+
+    class Meta:
+        verbose_name = 'Guilds Data'
+        verbose_name_plural = 'Guilds Data'
+
+
+class GuildPlayersData(models.Model):
     ally_code = models.PositiveIntegerField(
         primary_key=True,
         db_index=True,
@@ -111,15 +144,15 @@ class GuildData(models.Model):
         return self.player_name
 
     class Meta:
-        verbose_name = 'Guild Data'
-        verbose_name_plural = 'Guild Data'
+        verbose_name = 'Guild Players Data'
+        verbose_name_plural = 'Guild Players Data'
         abstract = True
 
 
 class GuildCharacter(models.Model):
     id = models.AutoField(primary_key=True)
     ally_code = models.ForeignKey(
-        'sync_swgoh.GuildData',
+        'sync_swgoh.GuildPlayersData',
         on_delete=models.CASCADE,
     )
     unit_id = models.ForeignKey(
@@ -172,7 +205,7 @@ class GuildCharacter(models.Model):
 class GuildShip(models.Model):
     id = models.AutoField(primary_key=True)
     ally_code = models.ForeignKey(
-        'sync_swgoh.GuildData',
+        'sync_swgoh.GuildPlayersData',
         on_delete=models.CASCADE,
     )
     unit_id = models.ForeignKey(

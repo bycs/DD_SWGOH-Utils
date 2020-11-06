@@ -1,9 +1,9 @@
 from django.db import models
 
-from sync_swgoh.models import GuildData, GuildCharacter, GuildShip
+from sync_swgoh.models import GuildPlayersData, GuildCharacter, GuildShip
 
 
-class IMData(GuildData):
+class IMData(GuildPlayersData):
     pass
 
 

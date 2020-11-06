@@ -147,9 +147,9 @@ def get_ally_count(guild_id):
     return count
 
 
-def get_base_units(combat_type):
+def get_base_units_combat_type(combat_type):
     """
-    Получение списка юнитов: персонажи или флот
+    Получение типа юнитов: персонажи или флот
 
     :input 'characters' or 'ships':
     :return массив с базой юнитов (DataFrame):
@@ -161,6 +161,16 @@ def get_base_units(combat_type):
     units.loc[:, 'combat_type'] = units.loc[:, 'combat_type'].astype('int8')
     units.set_axis(['unit_id', 'unit_name', 'max_power', 'url_image', 'combat_type'], axis='columns', inplace=True)
     units = units.sort_values(by=['unit_id']).reset_index(drop=True)
+    return units
+
+
+def get_base_units():
+    """
+    :return массив со всеми юнитами (DataFrame):
+    """
+    chars = get_base_units_combat_type('characters')
+    ships = get_base_units_combat_type('ships')
+    units = pd.concat([chars, ships]).sort_values(by=['combat_type']).reset_index(drop=True)
     return units
 
 
@@ -186,17 +196,6 @@ def get_base_abilities():
     abilities = abilities.drop_duplicates(subset=['ability_id'])
     abilities = abilities.sort_values(by=['unit_id', 'ability_id']).reset_index(drop=True)
     return abilities
-
-
-def get_base_units_and_abilities():
-    """
-    :return три массива со всеми персонажами, флотом и способностями (DataFrame x3):
-    """
-    chars = get_base_units('characters')
-    ships = get_base_units('ships')
-    units = pd.concat([chars, ships]).sort_values(by=['combat_type']).reset_index(drop=True)
-    abilities = get_base_abilities()
-    return units, abilities
 
 
 def get_arena_average_rank(ally_code):
