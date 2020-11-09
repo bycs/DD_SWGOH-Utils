@@ -286,3 +286,36 @@ def sync_for_guild_id(guild_id):
     units = units.sort_values(by=['ally_code']).reset_index(drop=True)
     chars, ships = units_combat_type(units)
     return data, chars, ships
+
+
+def get_data_guild(guild_id):
+    link = f'https://swgoh.gg/api/guild/{guild_id}/'
+    json_players = requests.get(link).json()['players']
+    json_data = requests.get(link).json()['data']
+    data = pd.DataFrame(
+        data=pd.json_normalize(json_data),
+        index=None,
+        columns=['id', 'name', 'galactic_power', 'member_count']
+        )
+    data.set_axis(
+        ['guild_id', 'guild_name', 'gp_total', 'players_count'],
+        axis='columns',
+        inplace=True
+    )
+    return data, json_players
+
+
+def get_units_guild(json):
+    pass
+
+
+def get_players_guild(json):
+    data = pd.DataFrame(data=None, index=None)
+    for player in range(len(json)):
+        data_player = get_data_player(json[player])
+        data = pd.concat([data, data_player])
+    data = data.sort_values(by=['player_name']).reset_index(drop=True)
+    chars_arena, ships_arena = get_arena_average_rank_for_list(data)
+    data['chars_average_rank'] = chars_arena
+    data['ships_average_rank'] = ships_arena
+    return data

@@ -22,13 +22,14 @@ class BaseUnit(models.Model):
         editable=False,
     )
     COMBAT_TYPE_CHOICES = [
-        (1, ''),
-        (2, ''),
+        (1, 'Character'),
+        (2, 'Ship'),
     ]
     combat_type = models.PositiveSmallIntegerField(
-        verbose_name='Combat Type',
+        blank=True,
         choices=COMBAT_TYPE_CHOICES,
         editable=False,
+        verbose_name='Combat Type',
     )
 
     base_unit_manager = BaseUnitManager()
@@ -90,6 +91,7 @@ class GuildsData(models.Model):
         verbose_name='Guild ID',
     )
     guild_name = models.CharField(
+        db_index=True,
         max_length=100,
         verbose_name='Guild Name',
     )
@@ -100,7 +102,10 @@ class GuildsData(models.Model):
         verbose_name='Players Count',
     )
     json_data_and_units = models.JSONField(
-        verbose_name='JSON with data and players'
+        blank=True,
+        editable=False,
+        null=True,
+        verbose_name='JSON with data and players',
     )
 
     def __str__(self):
