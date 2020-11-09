@@ -305,10 +305,6 @@ def get_data_guild(guild_id):
     return data, json_players
 
 
-def get_units_guild(json):
-    pass
-
-
 def get_players_guild(json):
     data = pd.DataFrame(data=None, index=None)
     for player in range(len(json)):
@@ -319,3 +315,12 @@ def get_players_guild(json):
     data['chars_average_rank'] = chars_arena
     data['ships_average_rank'] = ships_arena
     return data
+
+
+def get_units_guild(json):
+    units = pd.DataFrame(data=None, index=None)
+    for player in range(len(json)):
+        units_player = get_units_player(json[player])
+        units = pd.concat([units, units_player])
+    units = units.sort_values(by=['ally_code']).reset_index(drop=True)
+    return units
