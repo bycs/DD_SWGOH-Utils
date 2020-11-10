@@ -9,11 +9,14 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
-from pathlib import Path
 import os
+from pathlib import Path
+
 DJANGO_SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
-DATABASE_URL = os.environ['DATABASE_URL']
+DB_NAME = os.environ['DB_NAME']
+DB_USER = os.environ['DB_USER']
+DB_PASS = os.environ['DB_PASS']
+DB_HOST = os.environ['DB_HOST']
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -83,7 +86,11 @@ WSGI_APPLICATION = 'SWGOH_Utils.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': DATABASE_URL,
+        'NAME': DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASS,
+        'HOST': DB_HOST,
+        'PORT': '5432',
     }
 }
 
