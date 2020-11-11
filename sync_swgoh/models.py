@@ -1,5 +1,6 @@
 from django.db import models
-from sync_swgoh.managers import BaseUnitManager, BaseAbilityManager
+from sync_swgoh.managers import BaseUnitManager, BaseAbilityManager, \
+    GuildPlayersDataManager, GuildCharacterManager, GuildShipManager
 
 
 class BaseUnit(models.Model):
@@ -145,6 +146,8 @@ class GuildPlayersData(models.Model):
         verbose_name='Ships Arena',
     )
 
+    guild_players_data_manager = GuildPlayersDataManager()
+
     def __str__(self):
         return self.player_name
 
@@ -201,6 +204,8 @@ class GuildCharacter(models.Model):
         verbose_name='Tenacity',
     )
 
+    guild_character_manager = GuildCharacterManager()
+
     class Meta:
         verbose_name = 'Guild Character'
         verbose_name_plural = 'Guild Characters'
@@ -223,6 +228,8 @@ class GuildShip(models.Model):
     power = models.PositiveIntegerField(
         verbose_name='Power',
     )
+
+    guild_ship_manager = GuildShipManager()
 
     class Meta:
         verbose_name = 'Guild Ship'

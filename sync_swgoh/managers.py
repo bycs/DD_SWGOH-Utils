@@ -1,6 +1,7 @@
 from django.db import models
 from sync_swgoh.sync_swgoh import get_base_units, get_base_abilities, get_data_guild, \
     get_players_guild, get_units_guild, units_type_chars, units_type_ships
+from sync_swgoh.models import GuildsData
 
 
 class BaseUnitManager(models.Manager):
@@ -60,7 +61,7 @@ class GuildPlayersDataManager(models.Manager):
     def sync_to_db(self, guild_id):
         pass
         self.all().delete()
-        json = guild_id  # нужно взять json из БД по guild_id
+        json = GuildsData.objects.filter(guild_id=guild_id).json_data_and_units  # нужно взять json из БД по guild_id
         data = get_players_guild(json)
         data = data.to_dict('records')
         data_instances = [self.model(
@@ -80,7 +81,7 @@ class GuildCharacterManager(models.Manager):
     def sync_to_db(self, guild_id):
         pass
         self.all().delete()
-        json = guild_id  # нужно взять json из БД по guild_id
+        json = GuildsData.objects.filter(guild_id=guild_id).json_data_and_units  # нужно взять json из БД по guild_id
         units = get_units_guild(json)
         chars = units_type_chars(units)
         chars = chars.to_dict('records')
@@ -107,7 +108,7 @@ class GuildShipManager(models.Manager):
     def sync_to_db(self, guild_id):
         pass
         self.all().delete()
-        json = guild_id  # нужно взять json из БД по guild_id
+        json = GuildsData.objects.filter(guild_id=guild_id).json_data_and_units  # нужно взять json из БД по guild_id
         units = get_units_guild(json)
         ships = units_type_ships(units)
         ships = ships.to_dict('records')
