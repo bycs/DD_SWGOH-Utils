@@ -1,1 +1,1 @@
-web: gunicorn DD_SWGOH-Utils.wsgi --log-file -
+web: gunicorn SWGOH_Utils.wsgi --log-file -
