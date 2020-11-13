@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import BaseUnit, BaseAbility, GuildsData
+
+from swgoh_sync.models.base import BaseAbility, BaseUnit
+from swgoh_sync.models.guilds import GuildsData
 
 
 class BaseUnitAdmin(admin.ModelAdmin):
@@ -15,7 +17,7 @@ class BaseAbilityAdmin(admin.ModelAdmin):
 
 
 class GuildsDataAdmin(admin.ModelAdmin):
-    list_display = ['guild_id', 'guild_name', 'players_count', 'gp_total']
+    list_display = ['guild_id', 'guild_name', 'players_count', 'gp_total', 'last_sync']
     list_filter = ['guild_name']
     search_fields = ['guild_id', 'guild_name']
 
@@ -30,7 +32,7 @@ class GuildPlayersDataAdmin(admin.ModelAdmin):
         'ally_code', 'player_name', 'gp_chars', 'gp_ships', 'gp_total',
         'chars_average_rank', 'ships_average_rank', 'last_updated'
     ]
-    list_filter = ['ally_code', 'player_name']
+    list_filter = ['player_name']
     search_fields = ['ally_code', 'player_name']
 
 

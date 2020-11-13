@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class SyncSwgohConfig(AppConfig):
-    name = 'sync_swgoh'
+    name = 'swgoh_sync'
     verbose_name = 'SWGOH.gg Sync'
