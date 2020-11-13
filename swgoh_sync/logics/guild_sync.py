@@ -61,6 +61,12 @@ def get_arena_average_rank_for_guild(df_guild_players_data):
 
 
 def get_data_guild(json_guild):
+    """
+    Получение информации о гильдии
+
+    :input json_guild (json):
+    :return  (DataFrame):
+    """
     json_guild_data = json_guild['data']
     guild_data = pd.DataFrame(
         data=pd.json_normalize(json_guild_data),
@@ -77,6 +83,12 @@ def get_data_guild(json_guild):
 
 
 def get_players_guild(json_guild_players):
+    """
+    Получение игроков гильдии
+
+    :input json_guild_players (json):
+    :return  (DataFrame):
+    """
     data_players_guild = pd.DataFrame(data=None, index=None)
     for player in range(len(json_guild_players)):
         data_player = get_data_player(json_guild_players[player])
@@ -91,6 +103,12 @@ def get_players_guild(json_guild_players):
 
 
 def get_units_guild(json_guild_players):
+    """
+    Получение юнитов гильдии
+
+    :input json_guild_players (json):
+    :return  (DataFrame):
+    """
     units_guild = pd.DataFrame(data=None, index=None)
     for player in range(len(json_guild_players)):
         units_player = get_units_player(json_guild_players[player])

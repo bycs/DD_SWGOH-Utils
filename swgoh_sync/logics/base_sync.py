@@ -27,6 +27,8 @@ def get_base_units_combat_type(combat_type):
 
 def get_base_units():
     """
+    Получение всех юнитов (персонажи и флот)
+
     :return массив со всеми юнитами (DataFrame):
     """
     chars = get_base_units_combat_type('characters')
@@ -38,6 +40,8 @@ def get_base_units():
 
 def get_base_abilities():
     """
+    Получение всех способностей юнитов
+
     :return массив со всеми способностями (DataFrame):
     """
     url_abilities = 'https://swgoh.gg/api/abilities/'

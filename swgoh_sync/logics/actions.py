@@ -5,6 +5,7 @@ import requests
 def get_arena_average_rank(ally_code):
     """
     Получение средних значений арен игрока
+    по его коду союзника
 
     :input ally_code (int):
     :return (int х2):

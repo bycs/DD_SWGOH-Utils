@@ -19,7 +19,7 @@ def get_data_player(json_player):
     """
     Получение информации по игроку из json
 
-    :input json:
+    :input json_player (json):
     :return массив с данными о игроке (DataFrame):
     """
     data = json_player['data']
@@ -50,7 +50,7 @@ def get_units_player(json_player):
     """
     Получение списка персонажей по игроку из json
 
-    :input json:
+    :input json_player (json):
     :return массив с персонажами (DataFrame):
     """
     units = pd.json_normalize(
