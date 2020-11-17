@@ -40,10 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'swgoh_sync',
-    'swgoh_guilds.im',
     'about_players',
-
+    'squad_constructor',
+    'swgoh_guilds.im',
+    'swgoh_sync',
 ]
 
 MIDDLEWARE = [
