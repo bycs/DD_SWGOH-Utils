@@ -11,6 +11,7 @@ Django = "^3.1"
 requests = "^2.24.0"
 pandas = "^1.1.2"
 bs4 = "^0.0.1"
+python-dotenv = "^0.17.0"
 
 [tool.poetry.dev-dependencies]
 pip = "^20.2.4"
@@ -18,6 +19,7 @@ Django = "^3.1"
 requests = "^2.24.0"
 pandas = "^1.1.2"
 bs4 = "^0.0.1"
+python-dotenv = "^0.17.0"
 flake8 = "^3.8"
 
 [build-system]
