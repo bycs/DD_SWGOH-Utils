@@ -6,7 +6,6 @@ authors = ["Stas Cartoon <bycs@mail.ru>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-pip = "^20.2.4"
 Django = "^3.1"
 requests = "^2.24.0"
 pandas = "^1.1.2"
