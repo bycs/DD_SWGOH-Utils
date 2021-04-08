@@ -13,7 +13,7 @@ def get_guild_json(guild_id):
     :input guild_id (int):
     :return json:
     """
-    url = f'https://swgoh.gg/api/guild/{guild_id}/'
+    url = f"https://swgoh.gg/api/guild/{guild_id}/"
     json_guild = requests.get(url).json()
     return json_guild
 
@@ -25,9 +25,10 @@ def get_ally_list(guild_id):
     :input guild_id (int):
     :return список с игроками гильдии (list(int)):
     """
-    url = f'https://swgoh.gg/api/guild/{guild_id}/'
-    ally_list = pd.json_normalize(
-        requests.get(url).json()['players']).loc[:, 'data.ally_code']
+    url = f"https://swgoh.gg/api/guild/{guild_id}/"
+    ally_list = pd.json_normalize(requests.get(url).json()["players"]).loc[
+        :, "data.ally_code"
+    ]
     ally_list = list(ally_list)
     return ally_list
 
@@ -53,7 +54,7 @@ def get_arena_average_rank_for_guild(df_guild_players_data):
     """
     chars_arena = []
     ships_arena = []
-    for ally in df_guild_players_data['ally_code']:
+    for ally in df_guild_players_data["ally_code"]:
         chars_arena_player, ships_arena_player = get_arena_average_rank(ally)
         chars_arena.append(chars_arena_player)
         ships_arena.append(ships_arena_player)
@@ -67,18 +68,18 @@ def get_data_guild(json_guild):
     :input json_guild (json):
     :return  (DataFrame):
     """
-    json_guild_data = json_guild['data']
+    json_guild_data = json_guild["data"]
     guild_data = pd.DataFrame(
         data=pd.json_normalize(json_guild_data),
         index=None,
-        columns=['id', 'name', 'galactic_power', 'member_count']
-        )
-    guild_data.set_axis(
-        ['guild_id', 'guild_name', 'gp_total', 'players_count'],
-        axis='columns',
-        inplace=True
+        columns=["id", "name", "galactic_power", "member_count"],
     )
-    guild_data['last_sync'] = datetime.now().astimezone(tz=timezone.utc)
+    guild_data.set_axis(
+        ["guild_id", "guild_name", "gp_total", "players_count"],
+        axis="columns",
+        inplace=True,
+    )
+    guild_data["last_sync"] = datetime.now().astimezone(tz=timezone.utc)
     return guild_data
 
 
@@ -93,12 +94,12 @@ def get_players_guild(json_guild_players):
     for player in range(len(json_guild_players)):
         data_player = get_data_player(json_guild_players[player])
         data_players_guild = pd.concat([data_players_guild, data_player])
-    data_players_guild = data_players_guild.sort_values(
-        by=['player_name']
-    ).reset_index(drop=True)
+    data_players_guild = data_players_guild.sort_values(by=["player_name"]).reset_index(
+        drop=True
+    )
     chars_arena, ships_arena = get_arena_average_rank_for_guild(data_players_guild)
-    data_players_guild['chars_average_rank'] = chars_arena
-    data_players_guild['ships_average_rank'] = ships_arena
+    data_players_guild["chars_average_rank"] = chars_arena
+    data_players_guild["ships_average_rank"] = ships_arena
     return data_players_guild
 
 
@@ -113,5 +114,5 @@ def get_units_guild(json_guild_players):
     for player in range(len(json_guild_players)):
         units_player = get_units_player(json_guild_players[player])
         units_guild = pd.concat([units_guild, units_player])
-    units_guild = units_guild.sort_values(by=['ally_code']).reset_index(drop=True)
+    units_guild = units_guild.sort_values(by=["ally_code"]).reset_index(drop=True)
     return units_guild

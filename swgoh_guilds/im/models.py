@@ -9,13 +9,13 @@ class Data(GuildPlayersData):
 
 class Character(GuildCharacter):
     ally_code = models.ForeignKey(
-        'im.Data',
+        "im.Data",
         on_delete=models.CASCADE,
     )
 
 
 class Ship(GuildShip):
     ally_code = models.ForeignKey(
-        'im.Data',
+        "im.Data",
         on_delete=models.CASCADE,
     )

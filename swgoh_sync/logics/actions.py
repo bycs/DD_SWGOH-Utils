@@ -10,9 +10,9 @@ def get_arena_average_rank(ally_code):
     :input ally_code (int):
     :return (int х2):
     """
-    url = f'https://swgoh.gg/p/{ally_code}/'
+    url = f"https://swgoh.gg/p/{ally_code}/"
     html = requests.get(url).text
-    soup = BeautifulSoup(html, 'html.parser')
+    soup = BeautifulSoup(html, "html.parser")
     value_average_rank = soup.find_all("div", {"class": "stat-item-value"})
     value_list = []
     for value in value_average_rank:
@@ -37,8 +37,8 @@ def split_units_type_by_chars(units):
     :input units (DataFrame):
     :return массив с персонажами (DataFrame):
     """
-    characters = units[units['combat_type'] == 1]
-    del characters['combat_type']
+    characters = units[units["combat_type"] == 1]
+    del characters["combat_type"]
     return characters.reset_index(drop=True)
 
 
@@ -49,8 +49,8 @@ def split_units_type_by_ships(units):
     :input units (DataFrame):
     :return массив с флотом (DataFrame):
     """
-    ships = units[units['combat_type'] == 2]
-    ships = ships.loc[:, ['ally_code', 'unit_id', 'rarity', 'power']]
+    ships = units[units["combat_type"] == 2]
+    ships = ships.loc[:, ["ally_code", "unit_id", "rarity", "power"]]
     return ships.reset_index(drop=True)
 
 

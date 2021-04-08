@@ -1,34 +1,38 @@
 from django.db import models
-from swgoh_sync.managers.guild import GuildCharacterManager, GuildPlayersDataManager, GuildShipManager
+from swgoh_sync.managers.guild import (
+    GuildCharacterManager,
+    GuildPlayersDataManager,
+    GuildShipManager,
+)
 
 
 class GuildPlayersData(models.Model):
     ally_code = models.PositiveIntegerField(
         db_index=True,
         primary_key=True,
-        verbose_name='Ally Code',
+        verbose_name="Ally Code",
     )
     player_name = models.CharField(
         max_length=100,
-        verbose_name='Player Name',
+        verbose_name="Player Name",
     )
     gp_chars = models.PositiveIntegerField(
-        verbose_name='GP Characters',
+        verbose_name="GP Characters",
     )
     gp_ships = models.PositiveIntegerField(
-        verbose_name='GP Ships',
+        verbose_name="GP Ships",
     )
     gp_total = models.PositiveIntegerField(
-        verbose_name='GP Total',
+        verbose_name="GP Total",
     )
     last_updated = models.DateTimeField(
-        verbose_name='Last Updated',
+        verbose_name="Last Updated",
     )
     chars_average_rank = models.PositiveSmallIntegerField(
-        verbose_name='Chars Arena',
+        verbose_name="Chars Arena",
     )
     ships_average_rank = models.PositiveSmallIntegerField(
-        verbose_name='Ships Arena',
+        verbose_name="Ships Arena",
     )
 
     guild_players_data_manager = GuildPlayersDataManager()
@@ -38,25 +42,24 @@ class GuildPlayersData(models.Model):
 
     class Meta:
         abstract = True
-        verbose_name = 'Guild Players Data'
-        verbose_name_plural = 'Guild Players Data'
+        verbose_name = "Guild Players Data"
+        verbose_name_plural = "Guild Players Data"
 
 
 class GuildCharacter(models.Model):
-    id = models.AutoField(primary_key=True)
     ally_code = models.ForeignKey(
-        '.GuildPlayersData',
+        ".GuildPlayersData",
         on_delete=models.CASCADE,
     )
     unit_id = models.ForeignKey(
-        'swgoh_sync.BaseUnit',
+        "swgoh_sync.BaseUnit",
         on_delete=models.CASCADE,
     )
     rarity = models.PositiveSmallIntegerField(
-        verbose_name='Rarity',
+        verbose_name="Rarity",
     )
     gear_level = models.PositiveSmallIntegerField(
-        verbose_name='Gear Level',
+        verbose_name="Gear Level",
     )
     RELIC_TIER_CHOICES = [
         (1, 0),
@@ -71,64 +74,63 @@ class GuildCharacter(models.Model):
     ]
     relic_tier = models.PositiveSmallIntegerField(
         choices=RELIC_TIER_CHOICES,
-        verbose_name='Relic Tier',
+        verbose_name="Relic Tier",
     )
     power = models.PositiveIntegerField(
-        verbose_name='Power',
+        verbose_name="Power",
     )
     health = models.PositiveIntegerField(
-        verbose_name='Health',
+        verbose_name="Health",
     )
     protection = models.PositiveIntegerField(
-        verbose_name='Protection',
+        verbose_name="Protection",
     )
     speed = models.PositiveSmallIntegerField(
-        verbose_name='Speed',
+        verbose_name="Speed",
     )
     physical_damage = models.PositiveSmallIntegerField(
-        verbose_name='Physical Damage',
+        verbose_name="Physical Damage",
     )
     critical_damage = models.FloatField(
-        verbose_name='Critical Damage',
+        verbose_name="Critical Damage",
     )
     critical_chance = models.FloatField(
-        verbose_name='Critical Chance',
+        verbose_name="Critical Chance",
     )
     potency = models.FloatField(
-        verbose_name='Potency',
+        verbose_name="Potency",
     )
     tenacity = models.FloatField(
-        verbose_name='Tenacity',
+        verbose_name="Tenacity",
     )
 
     guild_character_manager = GuildCharacterManager()
 
     class Meta:
         abstract = True
-        verbose_name = 'Guild Character'
-        verbose_name_plural = 'Guild Characters'
+        verbose_name = "Guild Character"
+        verbose_name_plural = "Guild Characters"
 
 
 class GuildShip(models.Model):
-    id = models.AutoField(primary_key=True)
     ally_code = models.ForeignKey(
-        '.GuildPlayersData',
+        ".GuildPlayersData",
         on_delete=models.CASCADE,
     )
     unit_id = models.ForeignKey(
-        'swgoh_sync.BaseUnit',
+        "swgoh_sync.BaseUnit",
         on_delete=models.CASCADE,
     )
     rarity = models.PositiveSmallIntegerField(
-        verbose_name='Rarity',
+        verbose_name="Rarity",
     )
     power = models.PositiveIntegerField(
-        verbose_name='Power',
+        verbose_name="Power",
     )
 
     guild_ship_manager = GuildShipManager()
 
     class Meta:
         abstract = True
-        verbose_name = 'Guild Ship'
-        verbose_name_plural = 'Guild Ships'
+        verbose_name = "Guild Ship"
+        verbose_name_plural = "Guild Ships"

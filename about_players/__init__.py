@@ -1,1 +1,1 @@
-default_app_config = 'about_players.apps.AboutPlayersConfig'
+default_app_config = "about_players.apps.AboutPlayersConfig"
