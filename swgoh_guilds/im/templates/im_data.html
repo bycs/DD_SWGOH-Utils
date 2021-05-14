@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>iM Index</title>
+</head>
+<body>
+    <h2>{{ guild_name }}</h2>
+    <h4>Игроки:</h4>
+    <table>
+        <tr><th>Ник</th><th>Код союзника</th><th>Обновление</th></tr>
+        {% for player in players %}
+        <tr><td>{{ player.player_name }}</td><td>{{ player.ally_code }}</td><td>{{ player.last_updated }}</td></tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
